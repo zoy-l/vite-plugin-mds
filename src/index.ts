@@ -4,8 +4,6 @@ import MarkdownIt from 'markdown-it'
 import HtmlToJsx from 'htmltojsx'
 import matter from 'gray-matter'
 
-import { basename } from 'path'
-
 import { IOptions, ResolvedOptions } from './types'
 
 function toArray<T>(n: T | T[]): T[] {
@@ -106,9 +104,6 @@ function vitePluginMarkdown(options: IOptions): PluginOption {
       }
 
       function componentReact() {
-        let componentName = basename(path, '.md')
-        componentName = componentName.charAt(0).toUpperCase() + componentName.slice(1)
-
         const RE = /\{\{((?:.|\r?\n))+?\}\}/g
 
         code = code.replace(RE, (interpolation) => {
@@ -126,7 +121,7 @@ function vitePluginMarkdown(options: IOptions): PluginOption {
         import React from 'react'
         ${resolved.reactTransforms.import}
 
-        export default function ${componentName}(props){
+        export default function(props){
           const html = ${converter.convert(code)}
           ${resolved.reactTransforms.content}
           return {...html,...{props:{...html.props,...props}}}
